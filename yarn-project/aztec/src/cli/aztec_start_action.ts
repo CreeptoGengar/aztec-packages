@@ -1,3 +1,5 @@
+/// <reference types="node" />
+
 import {
   type NamespacedApiHandlers,
   createNamespacedSafeJsonRpcServer,
@@ -21,6 +23,12 @@ export async function aztecStart(options: any, userLog: LogFn, debugLogger: Logg
   const signalHandlers: Array<() => Promise<void>> = [];
   const services: NamespacedApiHandlers = {};
   let config: ChainConfig | undefined = undefined;
+
+  // Explicitly handle the sandbox.noPXE flag with proper typing
+  if (options['sandbox.noPXE'] !== undefined) {
+    options.sandbox = options.sandbox || {};
+    options.sandbox.noPXE = true as const;
+  }
 
   if (options.sandbox) {
     const cliVersion = getCliVersion();
